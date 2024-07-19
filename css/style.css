@@ -1,0 +1,27 @@
+@font-face {
+  font-family: "GangwonEdu_OTFBoldA";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "GangwonEdu_OTFLightA";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFLightA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+}
+
+.font_bold {
+  font-family: "GangwonEdu_OTFBoldA", sans-serif;
+}
+
+* {
+  font-family: "GangwonEdu_OTFLightA", sans-serif;
+  font-size: 16px; /* text-base */
+}
