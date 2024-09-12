@@ -1,8 +1,8 @@
 const searchInputEl = document.querySelector('.search_inp');
 const searchButtonEl = document.querySelector('.search_btn');
 const recipeContinerEl = document.querySelector('.recipe_container');
-const recipeDetailContinerEl = document.querySelector('.recipe_details_content');
-const recipeCloseButtonEl = document.querySelector('.recipe_close_btn');
+const recipeGastronomyEl = document.querySelector('.recipe_gastronomy');
+const popupCloseButtonEl = document.querySelector('.close_btn');
 
 
 const fetchRecipe = async (food) => {
@@ -83,6 +83,6 @@ searchButtonEl.addEventListener('click', (e) => {
     fetchRecipe(searchInput);
 });
 
-recipeCloseButtonEl.addEventListener('click', () => {
+popupCloseButtonEl.addEventListener('click', () => {
     recipeDetailContinerEl.parentElement.style.display = "none";
 })

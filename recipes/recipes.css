@@ -96,9 +96,9 @@ button[type="submit"] {
     border-radius: 6px;
     box-shadow: 0 5px 10px rgba(78, 73, 73, 0.1),
         -5px -5px 10px rgba(34, 34, 34, 0.5);
-    cursor: pointer;
-    max-width: 350px; /* 아이템이 하나일 때, 전체 화면 금지 */
+    max-width: 300px; /* 마지막 줄 아이템이 적을 때, 커지는 것 방지 */
     transition: transform 0.3s ease-in-out;
+    cursor: pointer;
 }
 
 .recipe:hover {
@@ -115,13 +115,12 @@ button[type="submit"] {
 }
 
 .recipe p {
-    color: #4a4a4a;
     font-size: 20px;
     margin: 5px 0;
 }
 
 .recipe span {
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .recipe button {
@@ -131,15 +130,14 @@ button[type="submit"] {
     border-radius: 5px;
     cursor: pointer;
     margin: 18px auto;
-    color: #2d2d2d;
     border: none;
-    background-color: var(--back-color-button);
+    background-color: var(--back-color-one);
 }
 
 .recipe_details button {
     border: none;
     width: 30px;
     height: 30px;
-    background-color: var(--back-color-button);
+    background-color: var(--back-color-one);
     cursor: pointer;
 }
