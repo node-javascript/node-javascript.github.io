@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,100&display=swap");
+
+:root {
+    --back-color-one: #ff95d4;
+    --back-color-two: #ffe7ff;
+    --back-button-color: #fb99fb;
+    --back-button-hover: #ff5c5c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizeing: border-box;
+
+    font-weight: 400;
+    font-family: "Roboto", sans-serif;
+}
+
+body {
+    color: #2d2d2d;
+    background-color: var(--back-color-two);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+
+    background-color: var(--back-color-one);
+    z-index: 1;
+}
+
+nav h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+nav .form {
+    display: flex;
+    justify-content: center;
+}
+
+.form input[type="text"] {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.form input[type="text"],
+button[type="submit"] {
+    border: none;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.form button[type="submit"] {
+    cursor: pointer;
+    background-color: var(--back-button-color);
+    transition: background-color 0.2s ease-in-out;
+}
+
+.form button[type="submit"]:hover,
+.recipe button:hover,
+.recipe_close_btn:hover svg {
+    color: #eaeaea;
+    background-color: var(--back-button-hover);
+}
