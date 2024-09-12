@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOME</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // PRODUCT CARD DISPLAY
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOMContentLoaded
+            // HTML 문서가 완전히 구문 분석되고 모든 지연된 스크립트
+            // (<script defer src="…">와 <script type="module">)가 다운로드되고
+            // 실행될 때 발생
+
+            // 컨테이너의 너비를 구하기
+            let productContainerWidth = document.querySelector('.product_cards_container').offsetWidth;
+            // 카드의 너비 지정
+            let productCardWidth = 260;
+            // 한 줄에 몇개의 카드가 들어가는가 계산(반올림)
+            // 왼쪽, 오른쪽 각각 5px씩 간격을 가짐, + 10px
+            let productCardPerRow = Math.floor(productContainerWidth / ( productCardWidth + 10 ));
+            // 컨테이너의 오른쪽에 남는 공간을 각각의 카드에 마진으로 나누어 넣어 주기
+            // 마지막에 "productCardPerRow - 1" 하는 이유는, 마지막 카드에는 마진을 안 넣어 주므로
+            let marginSpacing = ( productContainerWidth - (productCardPerRow * productCardWidth) ) / (productCardPerRow - 1);
+
+            // 마지막 엘리먼트 요소의 위치, index는 0부터 시작 (-1 해야 실제 위치)
+            let lastElement = productCardPerRow - 1;
+
+            // console.log('productContainerWidth', productContainerWidth);
+            // console.log('productCardPerRow', productCardPerRow);
+            // console.log('marginSpacing', marginSpacing);
+            // console.log('lastElement', lastElement);
+
+            // 선언, 섹션의 모든 제품 저장
+            let productCards;
+            let productSection = document.querySelectorAll('.product_section'); // 여러가지 요소 선택
+            productSection.forEach((section) => {
+                // 모든 카드를 선택, 12(0~11)개 선택
+                productCards = section.querySelectorAll('.product_card');
+                // console.log('productCards', productCards);
+                for(let i = 0; i < productCardPerRow; i++) {
+                    productCards[i].classList.add('active');
+
+                    if(i === lastElement) {
+                        // 마지막 아이템은 오른쪽 마진을 안 줌
+                        productCards[i].style.marginRight = '0px';
+                    }
+                    else {
+                        productCards[i].style.marginRight = `${marginSpacing}px`;
+                    }
+                }
+            })
+
+            // Adding items to Wishlist
+            let wishListCount = document.querySelector('#wishlist_link span');
+
+            // heart_button 클릭시, active 속성 추가하고 개수로 메인에 표시
+            let heartButtons = document.querySelectorAll('.heart_button');
+            heartButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    button.classList.toggle('active');
+                    wishListCount.innerHTML = document.querySelectorAll('.heart_button.active').length;
+                })
+            })
+
+            // 카트에 아이템 추가하기
+            let cartCount = document.querySelector('#cart_link span');
+            let cartButtons = document.querySelectorAll('.product_card .blue_button');
+            cartButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    button.classList.toggle('active');
+
+                    if(button.innerHTML.trim() === "Add To Cart") {
+                        // 중복 클릭 방지
+                        button.innerHTML = "Remove";
+                    }
+                    else if (button.innerHTML == "Remove") {
+                        button.innerHTML = "Add To Cart"
+                    } else {
+                        console.log("Error : Adding items to cart fail...", button.innerHTML)
+                    }
+                    cartCount.innerHTML = document.querySelectorAll('.product_card .blue_button.active').length;
+                })
+            })
+
+            // 슬라이더쇼
+            let slideshowButtons = document.querySelectorAll('.slideshow_button');
+            slideshowButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    // 어떤 섹션의 버튼인지 구분, 부모의 data-slideshow로 구분
+                    let slideshowSection = button.parentElement.dataset.slideshow;
+                    // 자신이 속한 슬라이더 컨네이너의 아이디를 알아낸다.
+                    let slideshowContainer = document.querySelector(`#product_section_${slideshowSection}`);
+                    // 카드
+                    let productCards = slideshowContainer.querySelectorAll('.product_card');
+
+                    if(button.classList.contains('prev_button')) {
+                        // 앞에 카드가 없는데, "이전" 버튼을 누르면, 뒤에 카드가 하나씩 사라짐
+                        // 끝 카드로 가서, 하나씩 앞으로 온다.
+                        if( lastElement <= (productCardPerRow - 1)) {
+                            lastElement = productCards.length - 1; // 0부터 시작하니까 -1
+                        }
+                        else {
+                            lastElement--;
+                        }
+                    }
+                    else if(button.classList.contains('next_button')) {
+                        // 마지막 카드가 없는데, "다음" 버튼을 누르면, 빈 카드가 나옴
+                        // 처음 카드로 가서, 하나씩 뒤로 온다.
+                        if( lastElement === (productCards.length - 1)) {
+                            lastElement = productCardPerRow - 1;
+                        }
+                        else {
+                            lastElement++;
+                        }
+                    }
+                    else {
+                        console.log("Error : Slideshow occurred...")
+                    }
+
+                    for( i = 0; i < productCards.length; i++) {
+                        if((i <= lastElement) && (i >= (lastElement - (productCardPerRow - 1)))) {
+                            // 해당 제품 카드가 표시되는지 확인
+                            productCards[i].classList.add('active');
+
+                            if(i === lastElement) {
+                                productCards[i].style.marginRight = '0px';
+                            }
+                            else {
+                                productCards[i].style.marginRight = `${marginSpacing}px`;
+                            }
+                        }
+                        else {
+                            // 활성화된 클래스 제거, 숨기기
+                            productCards[i].classList.remove('active');
+                            productCards[i].style.marginRight = '0px';
+                        }
+                    }
+                })
+            })
+
+        })
+    </script>
+</head>
+<body>
+    <nav>
+        <!-- NAVBAR -->
+        <div class="navbar">
+            <div class="navbar_logo">
+                <img src="./image/elife_logo.png" alt="elife, Company Ecommerce logo">
+            </div>
+            <div class="navbar_links">
+                <ul>
+                    <li><a href="index.html">HOME</a></li>
+                    <li><a href="products.html">Product</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+                <div class="navbar_tools">
+                    <a href="#" id="cart_link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bag" viewBox="0 0 16 16">
+                            <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+                        </svg>
+                        <span>0</span>
+                    </a>
+                    <a href="#" id="wishlist_link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                        </svg>
+                        <span>0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav> <!-- End of NAVBAR -->
+    <!-- PRODUCT PAGE'S MAIN BODY -->
+    <div class="product_page_body">
+        <!-- TOP SECTION -->
+        <div class="product_top_container">
+            <div class="product_top_wrapper">
+                <div class="product_top_text_section">
+                    <!-- heading, paragraph, button -->
+                    <h1>Latest Trending</h1>
+                    <h2>Wrieless Headphones</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies sed mauris pulvinar blandit. Proin consequat tellus nisl, at rutrum felis interdum sed. 
+                    </p>
+                    <button class="blue_button">
+                        Shop Now
+                    </button>
+                </div>
+                <div class="product_top_image_section">
+                    <img src="./image/productPage/top_image.png" alt="top image">
+                </div>
+            </div>
+        </div>
+    </div><!-- End of PRODUCT PAGE'S MAIN BODY -->
+    <!-- PRODUCT CATEGORIES -->    
+    <div class="product_category_container">
+        <div class="product_category_text">
+            <span class="blue_line"></span>
+            <span class="section_category_text">Categories</span>
+        </div>
+        <div class="product_category_wrapper">
+            <!-- 1 -->
+            <div class="product_category">
+                <div class="product_category_image_section">
+                    <img src="image/productPage/productCategory/all.png" alt="category all">                    
+                </div>
+                <div class="product_category_desc_section">
+                    <span class="product_category_type">All</span>
+                    <span class="product_category_number">60 items</span>
+                </div>
+            </div>
+            <!-- 2 -->
+            <div class="product_category">
+                <div class="product_category_image_section">
+                    <img src="image/productPage/productCategory/headphone.png" alt="category all">
+                </div>
+                <div class="product_category_desc_section">
+                    <span class="product_category_type">Headphones</span>
+                    <span class="product_category_number">12 items</span>
+                </div>
+            </div>
+            <!-- 3 -->
+            <div class="product_category">
+                <div class="product_category_image_section">
+                    <img src="image/productPage/productCategory/watch.png" alt="category all">
+                </div>
+                <div class="product_category_desc_section">
+                    <span class="product_category_type">Smartwatch</span>
+                    <span class="product_category_number">12 items</span>
+                </div>
+            </div>
+            <!-- 4 -->
+            <div class="product_category">
+                <div class="product_category_image_section">
+                    <img src="image/productPage/productCategory/phone.png" alt="category all">
+                </div>
+                <div class="product_category_desc_section">
+                    <span class="product_category_type">Phone</span>
+                    <span class="product_category_number">60 items</span>
+                </div>
+            </div>
+            <!-- 5 -->
+            <div class="product_category">
+                <div class="product_category_image_section">
+                    <img src="image/productPage/productCategory/ipad.png" alt="category all">
+                </div>
+                <div class="product_category_desc_section">
+                    <span class="product_category_type">Tablet</span>
+                    <span class="product_category_number">60 items</span>
+                </div>
+            </div>
+            <!-- 6 -->
+            <div class="product_category">
+                <div class="product_category_image_section">
+                    <img src="image/productPage/productCategory/laptop.png" alt="category all">
+                </div>
+                <div class="product_category_desc_section">
+                    <span class="product_category_type">LapTop</span>
+                    <span class="product_category_number">60 items</span>
+                </div>
+            </div>
+        </div>
+    </div><!-- End of PRODUCT CATEGORIES -->
+    <!-- PRODUCT CARDS / SLIDE SHOW -->
+    <div id="product_section_all" class="product_section">
+        <div class="product_section_top_container">
+            <div class="section_category_container">
+                <div class="section_category_type">
+                    <span class="blue_line"></span>
+                    <span class="section_category_text">All Electronics</span>
+                </div>
+                <h1>Explore Best Sellers</h1>
+            </div>
+            <div class="slideshow_buttons_container" data-slideshow="all">
+                <!--
+                    data-slideshow="all", all 색션의 버튼(<, >)이 클릭
+                    클릭된 섹션을 식별하기 위한 것
+                -->
+                <button class="slideshow_button prev_button">
+                    <!--
+                        bootstrap 아이콘은 얇은 반면, svgrepo 아이콘은 두껍고
+                        svgrepo 아이콘의 경우, 아이콘 색깔과 배경색을 직접 지정할 수 있다.
+
+                        stroke 속성을 변경해서, 아이콘 색깔 변경 : stroke="rgb(64,64,64)"
+                        너비와 높이 지정 가능 : width="30px" height="30px" 추가 가능
+                    -->
+                    <svg viewBox="0 0 24 24" fill="none" width="30px" height="30px" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15 6L9 12L15 18" stroke="rgb(64, 64, 64)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+                    </svg> -->
+                </button>
+                <button class="slideshow_button next_button">
+                    <svg viewBox="0 0 24 24" fill="none" width="30px" height="30px" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M9 6L15 12L9 18" stroke="rgb(64,64,64)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                </button>
+            </div>
+        </div>
+        <div class="product_cards_container">
+            <ul>
+                <li class="product_card">
+                    <div class="product_image_container">
+                        <img src="image/productPage/headphoneCollection/01.png" alt="01">
+                        <button class="heart_button">                            
+                            <svg viewBox="0 0 24 24" width="22px" height="22px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <!-- svg에서 stroke="#000000" 속성을 제거, css에서 색상을 설정하기 때문에 -->
+                        </button>
+                    </div>
+                    <div class="product_text_container">
+                        <h1>Navy Headphones</h1>
+                        <p>$87.99</p>
+                        <button class="blue_button">
+                            Add To Cart
+                        </button>
+                    </div>
+                </li>
+                <li class="product_card">
+                    <div class="product_image_container">
+                        <img src="image/productPage/laptopCollection/01.png" alt="01">
+                        <button class="heart_button">                            
+                            <svg viewBox="0 0 24 24" width="22px" height="22px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <!-- svg에서 stroke="#000000" 속성을 제거, css에서 색상을 설정하기 때문에 -->
+                        </button>
+                    </div>
+                    <div class="product_text_container">
+                        <h1>laptopCollection</h1>
+                        <p>$87.99</p>
+                        <button class="blue_button">
+                            Add To Cart
+                        </button>
+                    </div>
+                </li>
+                <li class="product_card">
+                    <div class="product_image_container">
+                        <img src="image/productPage/mobileCollection/01.png" alt="01">
+                        <button class="heart_button">                            
+                            <svg viewBox="0 0 24 24" width="22px" height="22px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <!-- svg에서 stroke="#000000" 속성을 제거, css에서 색상을 설정하기 때문에 -->
+                        </button>
+                    </div>
+                    <div class="product_text_container">
+                        <h1>Mobile</h1>
+                        <p>$87.99</p>
+                        <button class="blue_button">
+                            Add To Cart
+                        </button>
+                    </div>
+                </li>
+                <li class="product_card">
+                    <div class="product_image_container">
+                        <img src="image/productPage/smartwatchCollection/01.png" alt="01">
+                        <button class="heart_button">                            
+                            <svg viewBox="0 0 24 24" width="22px" height="22px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <!-- svg에서 stroke="#000000" 속성을 제거, css에서 색상을 설정하기 때문에 -->
+                        </button>
+                    </div>
+                    <div class="product_text_container">
+                        <h1>SmartWatch</h1>
+                        <p>$87.99</p>
+                        <button class="blue_button">
+                            Add To Cart
+                        </button>
+                    </div>
+                </li>
+                <li class="product_card">
+                    <div class="product_image_container">
+                        <img src="image/productPage/tabletCollection/01.png" alt="01">
+                        <button class="heart_button">                            
+                            <svg viewBox="0 0 24 24" width="22px" height="22px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <!-- svg에서 stroke="#000000" 속성을 제거, css에서 색상을 설정하기 때문에 -->
+                        </button>
+                    </div>
+                    <div class="product_text_container">
+                        <h1>Tablet</h1>
+                        <p>$87.99</p>
+                        <button class="blue_button">
+                            Add To Cart
+                        </button>
+                    </div>
+                </li>
+                <li class="product_card">
+                    <div class="product_image_container">
+                        <img src="image/productPage/headphoneCollection/02.png" alt="01">
+                        <button class="heart_button">                            
+                            <svg viewBox="0 0 24 24" width="22px" height="22px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <!-- svg에서 stroke="#000000" 속성을 제거, css에서 색상을 설정하기 때문에 -->
+                        </button>
+                    </div>
+                    <div class="product_text_container">
+                        <h1>Navy Headphones</h1>
+                        <p>$87.99</p>
+                        <button class="blue_button">
+                            Add To Cart
+                        </button>
+                    </div>
+                </li>
+                <li class="product_card">
+                    <div class="product_image_container">
+                        <img src="image/productPage/laptopCollection/02.png" alt="01">
+                        <button class="heart_button">                            
+                            <svg viewBox="0 0 24 24" width="22px" height="22px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <!-- svg에서 stroke="#000000" 속성을 제거, css에서 색상을 설정하기 때문에 -->
+                        </button>
+                    </div>
+                    <div class="product_text_container">
+                        <h1>laptopCollection</h1>
+                        <p>$87.99</p>
+                        <button class="blue_button">
+                            Add To Cart
+                        </button>
+                    </div>
+                </li>
+                <li class="product_card">
+                    <div class="product_image_container">
+                        <img src="image/productPage/mobileCollection/02.png" alt="01">
+                        <button class="heart_button">                            
+                            <svg viewBox="0 0 24 24" width="22px" height="22px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <!-- svg에서 stroke="#000000" 속성을 제거, css에서 색상을 설정하기 때문에 -->
+                        </button>
+                    </div>
+                    <div class="product_text_container">
+                        <h1>Mobile</h1>
+                        <p>$87.99</p>
+                        <button class="blue_button">
+                            Add To Cart
+                        </button>
+                    </div>
+                </li>
+                <li class="product_card">
+                    <div class="product_image_container">
+                        <img src="image/productPage/smartwatchCollection/02.png" alt="01">
+                        <button class="heart_button">                            
+                            <svg viewBox="0 0 24 24" width="22px" height="22px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <!-- svg에서 stroke="#000000" 속성을 제거, css에서 색상을 설정하기 때문에 -->
+                        </button>
+                    </div>
+                    <div class="product_text_container">
+                        <h1>SmartWatch</h1>
+                        <p>$87.99</p>
+                        <button class="blue_button">
+                            Add To Cart
+                        </button>
+                    </div>
+                </li>
+                <li class="product_card">
+                    <div class="product_image_container">
+                        <img src="image/productPage/tabletCollection/02.png" alt="01">
+                        <button class="heart_button">                            
+                            <svg viewBox="0 0 24 24" width="22px" height="22px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <!-- svg에서 stroke="#000000" 속성을 제거, css에서 색상을 설정하기 때문에 -->
+                        </button>
+                    </div>
+                    <div class="product_text_container">
+                        <h1>Tablet</h1>
+                        <p>$87.99</p>
+                        <button class="blue_button">
+                            Add To Cart
+                        </button>
+                    </div>
+                </li>
+                <li class="product_card">
+                    <div class="product_image_container">
+                        <img src="image/productPage/smartwatchCollection/03.png" alt="01">
+                        <button class="heart_button">                            
+                            <svg viewBox="0 0 24 24" width="22px" height="22px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <!-- svg에서 stroke="#000000" 속성을 제거, css에서 색상을 설정하기 때문에 -->
+                        </button>
+                    </div>
+                    <div class="product_text_container">
+                        <h1>SmartWatch</h1>
+                        <p>$87.99</p>
+                        <button class="blue_button">
+                            Add To Cart
+                        </button>
+                    </div>
+                </li>
+                <li class="product_card">
+                    <div class="product_image_container">
+                        <img src="image/productPage/tabletCollection/03.png" alt="01">
+                        <button class="heart_button">                            
+                            <svg viewBox="0 0 24 24" width="22px" height="22px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7 4C18.87 4 21 6.98 21 9.76C21 15.39 12.16 20 12 20C11.84 20 3 15.39 3 9.76C3 6.98 5.13 4 8.3 4C10.12 4 11.31 4.91 12 5.71C12.69 4.91 13.88 4 15.7 4Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                            <!-- svg에서 stroke="#000000" 속성을 제거, css에서 색상을 설정하기 때문에 -->
+                        </button>
+                    </div>
+                    <div class="product_text_container">
+                        <h1>Tablet</h1>
+                        <p>$87.99</p>
+                        <button class="blue_button">
+                            Add To Cart
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div> <!-- End of PRODUCT CARDS / SLIDE SHOW -->
+    <!-- PROMOTION SECTION -->
+    <div class="promotion_section">
+        <div class="promo_image_container">
+            <img src="image/productPage/promotionProducts/WATCH2.png" alt="promo">
+        </div>
+        <div class="promo_text_container">
+            <div class="promo_heading">
+                <span class="blue_line"></span>
+                <!-- promo_heading에 "display: flex;" 하니까 blue_line가 보임 -->
+                <h1>New Collection</h1>
+            </div>
+            <h2>Explore The World of Advanced Handwear</h2>
+            <p>
+                Lorem ipsum dolor sit amet consectetur elit adipisicing elit. Iusto ratione corporis ipsum error dolorum tempora, ea velit autem nisi voluptates natus reprehenderit voluptate, dicta itaque qui enim soluta aliquid odit?
+            </p>
+            <button class="blue_button">Shop Now</button>
+        </div>
+    </div> <!-- End of PROMOTION SECTION -->
+</body>
+</html>
