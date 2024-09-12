@@ -7,20 +7,22 @@
     <link rel="stylesheet" href="recipes.css">
 </head>
 <body>
-    <nav>
-        <h1>Recipe App</h1>
-        <div class="form">
-            <input class="search_inp" type="text" name="words" placeholder="Search for Recipes ...">
-            <button class="search_btn" type="submit">Search</button>
-        </div>
-    </nav>
+    <header>
+        <nav>
+            <h1>Recipe App</h1>
+            <div class="form">
+                <input class="search_inp" type="text" name="words" placeholder="Search for Recipes ...">
+                <button class="search_btn" type="submit">Search</button>
+            </div>
+        </nav>
+    </header>
     <section>
         <div class="recipe_container">
             <!-- recipe의 fetch 내용들이 담길 곳 -->
             <h2>Search your favourite Recipes ...</h2>
         </div>
         <div class="recipe_popup">
-            <button class="button" class="close_btn">
+            <button type="button" class="close_btn">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Menu / Close_SM"> <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg>
             </button>
             <div class="recipe_gastronomy"></div>

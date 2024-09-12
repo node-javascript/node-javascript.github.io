@@ -3,6 +3,7 @@ const searchButtonEl = document.querySelector('.search_btn');
 const recipeContinerEl = document.querySelector('.recipe_container');
 const recipeGastronomyEl = document.querySelector('.recipe_gastronomy');
 const popupCloseButtonEl = document.querySelector('.close_btn');
+console.log(popupCloseButtonEl)
 
 
 const fetchRecipe = async (food) => {
@@ -58,7 +59,7 @@ const fetchIngredients = (meal) => {
 }
 
 const openRecipePopup = (meal) => {
-    recipeDetailContinerEl.innerHTML = `
+    recipeGastronomyEl.innerHTML = `
         <h2 class="recipeName">${meal.strMeal}</h2>
         <h3>Ingredents:</h3>
         <ul class="recipeIngredientList">${fetchIngredients(meal)}</ul>
@@ -69,7 +70,7 @@ const openRecipePopup = (meal) => {
     `;
 
     // parent : recipe_details
-    recipeDetailContinerEl.parentElement.style.display = 'block';
+    recipeGastronomyEl.parentElement.style.display = 'block';
 }
 
 searchButtonEl.addEventListener('click', (e) => {
@@ -84,5 +85,5 @@ searchButtonEl.addEventListener('click', (e) => {
 });
 
 popupCloseButtonEl.addEventListener('click', () => {
-    recipeDetailContinerEl.parentElement.style.display = "none";
+    recipeGastronomyEl.parentElement.style.display = "none";
 })

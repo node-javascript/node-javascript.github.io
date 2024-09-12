@@ -66,7 +66,7 @@ button[type="submit"] {
 
 .form button[type="submit"]:hover,
 .recipe button:hover,
-.recipe_close_btn:hover svg {
+.close_btn:hover svg {
     color: var(--mouse-hover-color);
     background-color: var(--mouse-hover-bgcolor);
 }
@@ -134,10 +134,110 @@ button[type="submit"] {
     background-color: var(--back-color-one);
 }
 
-.recipe_details button {
+/* Recipe Popup */
+.recipe_popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 40%;
+    height: 60%;
+    overflow-y: scroll;
+    border-radius: 12px;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    background-color: #fde1e1;
+    transition: all 0.5s ease-in-out;
+}
+
+.recipe_popup button {
     border: none;
     width: 30px;
     height: 30px;
-    background-color: var(--back-color-one);
+    background-color: var(--back-color-button);
     cursor: pointer;
+}
+
+/* 요리법 */
+.recipe_popup .recipe_gastronomy {
+    padding: 30px;
+}
+
+.recipeName {
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: underline;
+}
+
+.recipeIngredientList li {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+}
+
+.recipeInstructions p {
+    line-height: 30px;
+    white-space: pre-line;
+}
+
+.recipeName,
+.recipeIngredientList,
+.recipeInstructions {
+    margin-bottom: 30px;
+}
+
+.close_btn {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+}
+
+.close_btn svg {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    border-radius: 50px;
+    background-color: rgb(251, 167, 181);
+}
+
+/* Adding scrollbar to recipe detals popup */
+.recipe_popup::-webkit-scrollbar {
+    width: 10px;
+}
+
+.recipe_popup::-webkit-scrollbar-thumb {
+    background-color: rgb(251, 167, 181);
+    border-radius: 16px;
+    --webkit-border-radius: 16px;
+}
+
+body::-webkit-scrollbar {
+    width: 16px;
+}
+
+body::-webkit-scrollbar-thumb {
+    border-radius: 16px;
+    --webkit-border-radius: 16px;
+    background-color: #ff5c5c;
+}
+
+body::-webkit-scrollbar-track {
+    background-color: #ffe7ff;
+}
+
+/* Responsive Code */
+@media screen and (max-width: 600px) {
+    header nav {
+        flex-direction: column;
+    }
+    header nav .form {
+        width: 80%;
+        margin-top: 20px;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    nav {
+        padding: 20px 100px;
+    }
 }
