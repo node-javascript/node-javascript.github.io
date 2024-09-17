@@ -1,0 +1,290 @@
+@font-face {
+    font-family: "GmarketSansMedium";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")
+        format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --text-color: #fff;
+    --sidebar-bg-color: #11101d;
+
+    --text-black-color: #1d1b31;
+    --icon-bg-color: #c9c9c9;
+}
+
+*,
+*::before,
+*::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+
+    /* font-size: 1.4rem; */
+    font-family: "GmarketSansMedium", sans-serif; /* 300, 500, 700 */
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+/* span {
+    display: block;
+} */
+
+body {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+
+    font-weight: 300;
+    color: var(--text-color);
+}
+
+.side_bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 78px;
+    height: 100%;
+    padding: 6px 14px;
+    background: var(--sidebar-bg-color);
+    transition: all 0.5s ease;
+}
+
+.side_bar.active {
+    width: 240px;
+}
+
+.side_bar .logo_content .logo {
+    /* display: flex;
+    justify-content: space-between; */
+
+    width: 100%;
+    height: 50px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.side_bar .logo_content .logo {
+    display: flex;
+    opacity: 0;
+}
+
+.side_bar.active .logo_content .logo {
+    opacity: 1;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.logo .text {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 15px;
+}
+
+.side_bar #menu_btn {
+    position: absolute;
+    left: 50%;
+    top: 10px;
+
+    width: 30px;
+    height: 30px;
+    margin-top: 5px;
+    /* text-align: center;
+    line-height: 50px; */
+    transform: translateX(-50%);
+    /* svg 크기를 크게해서 밀려난 만큼, 앞으로 옮겨 줌 */
+    cursor: pointer;
+}
+
+.side_bar.active #menu_btn {
+    left: 90%;
+}
+
+.side_bar ul {
+    margin-top: 20px;
+}
+
+.side_bar ul li {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 5px 5px; /* 아이템들 살짝 안으로 */
+    line-height: 3; /*  li 안쪽 간격, line-box의 높이를 설정 */
+}
+
+.side_bar ul li .tooltip {
+    position: absolute;
+    top: 50%;
+    left: 122px;
+    width: 122px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: var(--text-black-color);
+    border-radius: 6px;
+    background-color: #fff;
+    transform: translateY(-50%);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    transition: 0s;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+.side_bar.active ul li .tooltip {
+    display: none;
+}
+
+.side_bar ul li:hover .tooltip {
+    top: 50%;
+    transition: all 0.5s ease;
+    opacity: 1;
+}
+
+.side_bar ul li input {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+
+    color: white;
+    outline: none;
+    border: none;
+    background-color: var(--text-black-color);
+    padding-left: 50px;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+.side_bar ul li .search_box_svg {
+    position: absolute;
+    top: 6px;
+    left: 10px;
+    width: 22px;
+    hight: 22px;
+    z-index: 99;
+}
+
+.side_bar ul li .search_box_svg:hover {
+    background: #fff;
+    color: var(--text-black-color);
+    transition: all 0.5 ease;
+}
+
+.search_box_svg svg {
+    width: 20px;
+    height: 20px;
+}
+
+.side_bar ul li a {
+    display: flex;
+    align-items: center; /* svg 가운데로 */
+    /* 가상클래스(:hover) 적용시 작동 */
+    transition: all 0.4s ease;
+    border-radius: 12px;
+}
+
+.side_bar ul li a:hover {
+    color: #11101d;
+    background-color: #fff;
+}
+
+.side_bar .svg_box {
+    height: 30px;
+    min-width: 30px;
+    border-radius: 12px;
+    border: 1px solid white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.svg_box svg {
+    height: 20px;
+    min-width: 20px;
+    line-height: 2;
+}
+
+.side_bar ul li a:hover svg {
+    color: black;
+}
+
+.profile_content {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+}
+
+.profile_content .profile {
+    position: relative;
+    padding: 10px 6px;
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+    background: #1d1b31;
+}
+
+.profile_content .profile img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.profile_content .profile .user_info {
+    margin-left: 10px;
+}
+
+.profile_content .profile .user_info .name {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.profile_content .profile .user_info .job {
+    font-size: 12px;
+}
+
+#logout {
+    position: absolute;
+    left: 88%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    min-width: 50xp;
+}
+
+#logout svg {
+    font-size: 20px;
+    border-radius: 12px;
+}
+
+.home_content {
+    position: absolute;
+    top: 0;
+    left: 240px;
+
+    color: var(--text-black-color);
+    height: 100%;
+    width: calc(100% - 240px);
+}
